@@ -6,7 +6,7 @@ train_dataset:
     classname: torchvision.datasets.CIFAR10
     args:
         train: True
-        download: False
+        download: True
         root: 'cifar10_dataset'
     transforms:
         - classname: torchvision.transforms.Resize
@@ -25,7 +25,7 @@ test_datasets:
       classname: torchvision.datasets.CIFAR10
       args:
           train: False
-          download: False
+          download: True
           root: 'cifar10_dataset/'
     - name: 'stl-test'
       classname: datasets.stl_cifar_style.STL10

@@ -157,3 +157,7 @@ swav/*.out
 *.out
 /results/
 *~
+.tmp.driveupload/*
+.tmp.drivedownload/*
+cl/.DS_Store
+cl/moco_v2_800ep_pretrain.pth.tar
