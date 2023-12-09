@@ -22,6 +22,7 @@ import yaml
 import quinine
 import numpy as np
 import fastDP
+from opacus.validators import ModuleValidator
 
 from differentially_private.models import resnet
 from differentially_private.utils.accumulator import Accumulator
@@ -372,6 +373,11 @@ def train(epoch, config, train_loader, net, device, optimizer, criterion, model_
     batch_splits = 1
     if check_exists_not_none(config, 'batch_splits'):
         batch_splits = config['batch_splits']
+    # load privacy engine
+    privacy_engine = utils.initialize(
+        config['privacy_engine'], update_args={'module': net, 'epochs': 1}
+    )
+    privacy_engine.attach(optimizer)
     for i, data in enumerate(train_loader, 0):
         optimizer.zero_grad()
         all_inputs, all_labels = data
@@ -444,6 +450,8 @@ def train(epoch, config, train_loader, net, device, optimizer, criterion, model_
                 log_dir=log_dir, loss_name_prefix='inter_test_loss/', acc_name_prefix='inter_test_acc/')
             if config['wandb']:
                 wandb.log(stats)
+    privacy_engine.detach()
+
     reset_state(net, training_state)
     train_stats = {'epoch': epoch}
     lr = 0.0
@@ -505,6 +513,7 @@ def main(config, log_dir, checkpoints_dir):
     test_loaders, max_test_examples = get_test_loaders(config)
     # Create model.
     net = build_model(config)
+    net = ModuleValidator.fix(net)
     # Use CUDA if desired. 
     logging.info(f'cuda device count: {torch.cuda.device_count()}') 
     if config['use_cuda']:

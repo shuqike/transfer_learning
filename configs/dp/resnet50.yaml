@@ -27,7 +27,7 @@ privacy_engine:
   args:
     batch_size: 64
     sample_size: 50000
-    target_epsilon: 1
+    noise_multiplier: 9
     clipping_fn: 'automatic'
     clipping_mode: 'MixOpt'
     origin_params: None
