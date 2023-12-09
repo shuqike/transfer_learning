@@ -14,11 +14,11 @@ import quinine
 import pickle
 import socket
 
-import unlabeled_extrapolation.utils.utils as utils
-from unlabeled_extrapolation.baseline_train import build_model
-from unlabeled_extrapolation.baseline_train import get_test_loaders
-from unlabeled_extrapolation.baseline_train import get_train_loader
-from unlabeled_extrapolation.baseline_train import preprocess_config
+import differentially_private.utils.utils as utils
+from differentially_private.baseline_train import build_model
+from differentially_private.baseline_train import get_test_loaders
+from differentially_private.baseline_train import get_train_loader
+from differentially_private.baseline_train import preprocess_config
 
 
 def load_model(config_path, checkpoint_path, use_cuda=True):

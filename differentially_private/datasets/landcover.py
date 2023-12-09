@@ -7,7 +7,7 @@ from scipy import signal
 from torch.utils.data import Dataset
 import re
 from .range_dataset import RangeDataset
-from unlabeled_extrapolation.utils.data_utils import get_split_idxs
+from differentially_private.utils.data_utils import get_split_idxs
 
 DATA_ROOT = 'timeseries_by_box_v2'
 DATA_CACHE = 'landcover_data.pkl'

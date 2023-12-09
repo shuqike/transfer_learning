@@ -21,12 +21,13 @@ import wandb
 import yaml
 import quinine
 import numpy as np
+import fastDP
 
-from unlabeled_extrapolation.models import resnet
-from unlabeled_extrapolation.utils.accumulator import Accumulator
-import unlabeled_extrapolation.utils.utils as utils
-import unlabeled_extrapolation.utils.schedulers as schedulers
-import unlabeled_extrapolation.utils.layer_wise_tuner as layer_wise_tuner
+from differentially_private.models import resnet
+from differentially_private.utils.accumulator import Accumulator
+import differentially_private.utils.utils as utils
+import differentially_private.utils.schedulers as schedulers
+import differentially_private.utils.layer_wise_tuner as layer_wise_tuner
 from timm.data.mixup import Mixup
 
 log_level = logging.INFO

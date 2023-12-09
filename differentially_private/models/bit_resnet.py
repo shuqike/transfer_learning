@@ -25,7 +25,7 @@ import torch.nn.functional as F
 import numpy as np
 from torchvision.transforms import Normalize
 
-import unlabeled_extrapolation.utils.utils as utils
+import differentially_private.utils.utils as utils
 
 class StdConv2d(nn.Conv2d):
 

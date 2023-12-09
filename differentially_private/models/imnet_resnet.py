@@ -7,7 +7,7 @@ from torch import nn
 from . import model_utils
 from torchvision.transforms import Normalize
 
-import unlabeled_extrapolation.utils.utils as utils
+import differentially_private.utils.utils as utils
 
 try:
     from models import swav_resnet50
