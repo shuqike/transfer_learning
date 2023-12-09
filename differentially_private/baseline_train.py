@@ -374,7 +374,7 @@ def train(epoch, config, train_loader, net, device, optimizer, criterion, model_
     if check_exists_not_none(config, 'batch_splits'):
         batch_splits = config['batch_splits']
     # load privacy engine
-    privacy_engine = utils.initialize(
+    privacy_engine = utils.loose_initialize(
         config['privacy_engine'], update_args={'module': net, 'epochs': 1}
     )
     privacy_engine.attach(optimizer)

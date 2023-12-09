@@ -19,6 +19,37 @@ def save_json(save_path, save_dict):
         json.dump(save_dict, outfile)
 
 
+def loose_initialize_obj(classname, args_dict=None):
+    module_name, class_name = classname.rsplit(".", 1)
+    Class = getattr(importlib.import_module(module_name), class_name)
+    if not inspect.isclass(Class):
+        raise ValueError("Can only initialize classes, are you passing in a function?")
+    # filter by argnames
+    if args_dict is not None:
+        argspec = inspect.getfullargspec(Class.__init__)
+        argnames = argspec.args
+        defaults = argspec.defaults
+        # add defaults
+        if defaults is not None:
+            for argname, default in zip(argnames[-len(defaults):], defaults):
+                if argname not in args_dict:
+                    args_dict[argname] = default
+        class_instance = Class(**args_dict)
+    else:
+        class_instance = Class()
+    return class_instance
+
+
+def loose_initialize(obj_config, update_args=None):
+    classname = obj_config['classname']
+    kwargs = obj_config.get('args')
+    if kwargs is None:
+        kwargs = {}
+    if update_args is not None:
+        kwargs.update(update_args)
+    return loose_initialize_obj(classname, kwargs)
+
+
 def initialize_obj(classname, args_dict=None):
     module_name, class_name = classname.rsplit(".", 1)
     Class = getattr(importlib.import_module(module_name), class_name)
