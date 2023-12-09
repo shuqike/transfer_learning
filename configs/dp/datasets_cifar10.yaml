@@ -41,7 +41,6 @@ test_datasets:
           train: False
           download: True
           root: 'cifar10_dataset/'
-          split: 'test'
 
 early_stop_dataset_names:
     - 'cifar10-test'
