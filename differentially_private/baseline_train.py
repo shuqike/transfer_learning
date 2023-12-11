@@ -214,6 +214,8 @@ def build_model(config):
         if 'probe_net' in config:
             probe_net = utils.initialize(config['probe_net'])
             net.add_probe(probe_net)
+        elif config['model']['args']['pretrain_style'] == 'mocov2_lped':
+            print('using pretrained linear head')
         else:
             net.new_last_layer(config['num_classes'])
         if tune_bottom_k:

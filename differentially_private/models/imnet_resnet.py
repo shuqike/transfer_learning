@@ -15,7 +15,7 @@ except:
     from . import swav_resnet50
 
 
-PRETRAIN_STYLE = ['supervised', 'mocov2', 'swav', 'simclrv2']
+PRETRAIN_STYLE = ['supervised', 'mocov2', 'mocov2_lped', 'swav', 'simclrv2']
 
 imnet_normalize_transform = Normalize(
     mean=(0.485, 0.456, 0.406),
@@ -24,6 +24,8 @@ imnet_normalize_transform = Normalize(
 
 def load_moco(checkpoint_path):
     checkpoint = torch.load(checkpoint_path, map_location="cpu")
+    if 'arch' not in checkpoint:
+        checkpoint['arch'] = 'resnet50'
     model = models.__dict__[checkpoint['arch']]()
 
     state_dict = checkpoint['state_dict']
@@ -36,6 +38,26 @@ def load_moco(checkpoint_path):
         del state_dict[k]
     msg = model.load_state_dict(state_dict, strict=False)
     assert set(msg.missing_keys) == {"fc.weight", "fc.bias"}
+    return model
+
+
+def load_moco_lped(checkpoint_path):
+    checkpoint = torch.load(checkpoint_path, map_location="cpu")
+    if 'arch' not in checkpoint:
+        checkpoint['arch'] = 'resnet50'
+    model = models.__dict__[checkpoint['arch']]()
+    state_dict = checkpoint['state_dict']
+    for k in list(state_dict.keys()):
+        # remove prefix
+        if k.startswith('_model.'):
+            state_dict[k[len('_model.'):]] = state_dict[k]
+            # delete renamed k
+            del state_dict[k]
+    # align model fc size
+    model.fc = nn.Linear(in_features=model.fc.in_features, out_features=state_dict['fc.bias'].shape[0])
+    # load pretrained weights into the model
+    msg = model.load_state_dict(state_dict)
+    assert len(msg.missing_keys) == 0
     return model
 
 
@@ -68,7 +90,9 @@ class ResNet50(nn.Module):
                 f'Pretrain style should be in {PRETRAIN_STYLE} but was {pretrain_style}')
         if pretrained and pretrain_style == 'mocov2':
             self._model = load_moco(checkpoint_path)
-        if pretrained and pretrain_style == 'swav':
+        elif pretrained and pretrain_style == 'mocov2_lped':
+            self._model = load_moco_lped(checkpoint_path)
+        elif pretrained and pretrain_style == 'swav':
             self._model = load_swav(checkpoint_path)
         elif pretrained and pretrain_style == 'simclrv2':
             raise NotImplementedError()
