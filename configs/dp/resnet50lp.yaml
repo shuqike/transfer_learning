@@ -6,14 +6,14 @@ batch_size: 64
 num_workers: 4
 save_all_checkpoints: False
 
-finetune: True
-linear_probe: False
+finetune: False
+linear_probe: True
 use_net_val_mode: False
 
 optimizer:
   classname: torch.optim.SGD
   args:
-    lr: 0.03
+    lr: 0.5
     momentum: 0.0
     weight_decay: 0.0
 
