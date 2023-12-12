@@ -6,6 +6,7 @@ import torch
 from torch import nn
 from . import model_utils
 from torchvision.transforms import Normalize
+from opacus.validators import ModuleValidator
 
 import differentially_private.utils.utils as utils
 
@@ -55,8 +56,10 @@ def load_moco_lped(checkpoint_path):
             del state_dict[k]
     # align model fc size
     model.fc = nn.Linear(in_features=model.fc.in_features, out_features=state_dict['fc.bias'].shape[0])
+    # replace some components for privacy
+    # model = ModuleValidator.fix(model)
     # load pretrained weights into the model
-    msg = model.load_state_dict(state_dict)
+    msg = model.load_state_dict(state_dict, strict=True)
     assert len(msg.missing_keys) == 0
     return model
 

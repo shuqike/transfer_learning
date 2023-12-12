@@ -638,6 +638,7 @@ def main(config, log_dir, checkpoints_dir):
     if 'l2sp_weight' in config:
         weight_dict_initial, _ = get_param_weights_counts(net, detach=True)
 
+    print('debug', net._model.fc.weight)
     num_epochs = config['epochs']
     for epoch in range(num_epochs): 
         logging.info("\nEpoch #{}".format(epoch))
