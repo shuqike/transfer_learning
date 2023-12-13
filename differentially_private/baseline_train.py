@@ -520,6 +520,7 @@ def main(config, log_dir, checkpoints_dir):
     logging.info(f'cuda device count: {torch.cuda.device_count()}') 
     if config['use_cuda']:
         # Often makes things faster, by benchmarking and figuring out how to optimize.
+        cudnn.deterministic = True # In order to force the cuda portion of the algorithm to be deterministic in batch norm for PyTorch, https://github.com/pytorch/pytorch/issues/8283
         cudnn.benchmark = True
         device = "cuda"
         net.cuda()
@@ -844,6 +845,7 @@ def update_dataset_names(config):
 def set_random_seed(seed):
     if seed is not None:
         torch.manual_seed(seed)
+        torch.cuda.manual_seed(seed)
         np.random.seed(seed + 111)
 
 

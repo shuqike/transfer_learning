@@ -35,14 +35,6 @@ test_datasets:
           train: False
           download: True
           root: 'cifar10_dataset/'
-    - name: 'stl-test'
-      classname: torchvision.datasets.CIFAR10
-      args:
-          train: False
-          download: True
-          root: 'cifar10_dataset/'
 
 early_stop_dataset_names:
     - 'cifar10-test'
-    - 'stl-test'
-

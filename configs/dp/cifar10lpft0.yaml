@@ -11,7 +11,7 @@ model:
   args:
     pretrained: True
     pretrain_style: 'mocov2_lped'
-    checkpoint_path: 'logs/dplppart_cifar10_lr_1_nm_0.1_mt_0_sd_0/checkpoints/ckp_last'
+    checkpoint_path: 'logs/dplppart_cifar10_lr_0.5_nm_0.1_mt_0_sd_0/checkpoints/ckp_best_cifar10-test'
 
 scheduler:
   classname: torch.optim.lr_scheduler.CosineAnnealingLR

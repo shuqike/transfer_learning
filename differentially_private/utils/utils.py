@@ -109,9 +109,15 @@ def init_dataset(dataset_config):
 def save_ckp(epoch, model, optimizer, scheduler, model_dir, chkpt_name):
     checkpoint_fpath = str(model_dir / chkpt_name)
     logging.info(f"Saving to checkpoint {checkpoint_fpath}")
+    state_dict_extra = None
+    try:
+        state_dict_extra = model._model.state_dict()
+    except AttributeError:
+        print('cannot get state_dict_extra')
     state = {
         'epoch': epoch,
         'state_dict': model.state_dict(),
+        'state_dict_extra': state_dict_extra,
         'optimizer': optimizer.state_dict(),
         'scheduler': scheduler.state_dict()
     }
