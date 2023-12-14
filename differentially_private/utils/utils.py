@@ -112,6 +112,7 @@ def save_ckp(epoch, model, optimizer, scheduler, model_dir, chkpt_name):
     state_dict_extra = None
     try:
         state_dict_extra = model._model.state_dict()
+        print('debug head param', model._model.fc.weight)
     except AttributeError:
         print('cannot get state_dict_extra')
     state = {
