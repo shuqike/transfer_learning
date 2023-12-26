@@ -164,3 +164,11 @@ cl/moco_v2_800ep_pretrain.pth.tar
 .DS_Store
 configs/.DS_Store
 *.tar
+cl/Icon
+CLIP/clip/Icon
+CLIP/data/Icon
+CLIP/Icon
+CLIP/notebooks/Icon
+CLIP/tests/Icon
+configs/adaptation/Icon
+configs/dp/Icon
