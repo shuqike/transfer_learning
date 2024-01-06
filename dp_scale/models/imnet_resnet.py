@@ -8,7 +8,7 @@ from . import model_utils
 from torchvision.transforms import Normalize
 from opacus.validators import ModuleValidator
 
-import differentially_private.utils.utils as utils
+import dp_scale.utils.utils as utils
 
 try:
     from models import swav_resnet50
@@ -31,21 +31,12 @@ def load_moco(checkpoint_path):
 
     state_dict = checkpoint['state_dict']
     for k in list(state_dict.keys()):
-        if 'moco_v2' in checkpoint_path:
-            # retain only encoder_q up to before the embedding layer
-            if k.startswith('module.encoder_q') and not k.startswith('module.encoder_q.fc'):
-                # remove prefix
-                state_dict[k[len("module.encoder_q."):]] = state_dict[k]
-            # delete renamed or unused k
-            del state_dict[k]
-        else:
-            linear_keyword = 'fc'
-            # retain only base_encoder up to before the embedding layer
-            if k.startswith('module.base_encoder') and not k.startswith('module.base_encoder.%s' % linear_keyword):
-                # remove prefix
-                state_dict[k[len("module.base_encoder."):]] = state_dict[k]
-            # delete renamed or unused k
-            del state_dict[k]
+        # retain only encoder_q up to before the embedding layer
+        if k.startswith('module.encoder_q') and not k.startswith('module.encoder_q.fc'):
+            # remove prefix
+            state_dict[k[len("module.encoder_q."):]] = state_dict[k]
+        # delete renamed or unused k
+        del state_dict[k]
     msg = model.load_state_dict(state_dict, strict=False)
     assert set(msg.missing_keys) == {"fc.weight", "fc.bias"}
     return model
@@ -58,19 +49,10 @@ def load_moco_lped(checkpoint_path):
     model = models.__dict__[checkpoint['arch']]()
     state_dict = checkpoint['state_dict']
     for k in list(state_dict.keys()):
-        if 'moco_v2' in checkpoint_path:
-            # remove prefix
-            if k.startswith('_model.'):
-                state_dict[k[len('_model.'):]] = state_dict[k]
-                # delete renamed k
-                del state_dict[k]
-        else:
-            linear_keyword = 'fc'
-            # retain only base_encoder up to before the embedding layer
-            if k.startswith('module.base_encoder') and not k.startswith('module.base_encoder.%s' % linear_keyword):
-                # remove prefix
-                state_dict[k[len("module.base_encoder."):]] = state_dict[k]
-            # delete renamed or unused k
+        # remove prefix
+        if k.startswith('_model.'):
+            state_dict[k[len('_model.'):]] = state_dict[k]
+            # delete renamed k
             del state_dict[k]
     # align model fc size
     model.fc = nn.Linear(in_features=model.fc.in_features, out_features=state_dict['fc.bias'].shape[0])
