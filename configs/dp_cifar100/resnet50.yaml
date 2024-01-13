@@ -1,0 +1,34 @@
+
+log_interval: 5000
+use_cuda: True
+save_freq: 1001
+batch_size: 64
+num_workers: 4
+save_all_checkpoints: False
+
+finetune: True
+linear_probe: False
+use_net_val_mode: False
+
+optimizer:
+  classname: torch.optim.SGD
+  args:
+    lr: 0.03
+    momentum: 0.0
+    weight_decay: 0.0
+
+criterion:
+  classname: torch.nn.CrossEntropyLoss
+  args:
+    reduction: mean
+
+privacy_engine:
+  classname: fastDP.PrivacyEngine
+  args:
+    batch_size: 64
+    sample_size: 50000
+    noise_multiplier: 0.1
+    clipping_fn: 'automatic'
+    clipping_mode: 'MixOpt'
+    origin_params: None
+    clipping_style: 'all-layer'
